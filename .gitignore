@@ -1,0 +1,22 @@
+.cache
+compile_commands.json
+*.swp
+
+# ESP-IDF default build directory name
+build
+build/
+build_*/
+sdkconfig
+sdkconfig.old
+dependencies.lock
+managed_components
+__pycache__/
+out/
+_build/
+
+pytest_embedded_log/
+
+# clangd set
+.clangd
+compile_commands.json
+.clang-format
