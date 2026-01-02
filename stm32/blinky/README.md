@@ -27,7 +27,6 @@ git clone https://github.com/ObKo/stm32-cmake ~/stm32/stm32-cmake
 
 rm -rf build && mkdir build && cd build
 cmake .. \
-  -DCMAKE_TOOLCHAIN_FILE=~/stm32/stm32-cmake/cmake/stm32_gcc.cmake \
   -DBLINKY_F1_EXAMPLE=ON \
   -DSTM32_CUBE_F1_PATH=~/stm32/STM32CubeF1 \
   -DSTM32_CHIP=STM32F103x6
