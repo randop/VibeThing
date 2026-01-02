@@ -9,6 +9,7 @@ sudo pacman -S meson \
   ninja \
   cmake \
   make \
+  clang \
   git \
   python \
   arm-none-eabi-gcc \
