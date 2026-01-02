@@ -1,6 +1,6 @@
 # VibeThing
 
-The Internet of things (IoT), Zigbee, Matter, Thread, WiFi, ESP32, STM32, Arduino
+The Internet of things (IoT), Zigbee, Matter, Thread, WiFi, ESP32, STM32, FreeRTOS, Arduino
 
 ---
 ## 📝 License
