@@ -19,4 +19,3 @@ pytest_embedded_log/
 # clangd set
 .clangd
 compile_commands.json
-.clang-format
