@@ -39,61 +39,54 @@
 #define LED_PORT_CLK_ENABLE __HAL_RCC_GPIOB_CLK_ENABLE
 #endif
 
-/***
-static void blinky::blinkTask(void *arg) {
-  (void)arg;  // Unused parameter
-
+static void blinky::simpleBlink(void *arg) {
   for (;;) {
     vTaskDelay(10000);
     HAL_GPIO_TogglePin(LED_PORT, LED_PIN);
   }
 }
-***/
 
-static void blinky::blinkTask(void *arg)
-{
-    (void)arg;
+static void blinky::blinkTask(void *arg) {
+  (void)arg;
 
-    // Important for Blue Pill / STM32F103C8T6 clones:
-    // The onboard LED is on PC13 and active-low (RESET = ON, SET = OFF).
+  // Important for Blue Pill / STM32F103C8T6 clones:
+  // The onboard LED is on PC13 and active-low (RESET = ON, SET = OFF).
 
-    const GPIO_PinState LED_ON  = GPIO_PIN_RESET;  // Active-low
-    const GPIO_PinState LED_OFF = GPIO_PIN_SET;
+  const GPIO_PinState LED_ON = GPIO_PIN_RESET; // Active-low
+  const GPIO_PinState LED_OFF = GPIO_PIN_SET;
 
-    // Start with LED off
+  // Start with LED off
+  HAL_GPIO_WritePin(LED_PORT, LED_PIN, LED_OFF);
+
+  const TickType_t delay_5s = pdMS_TO_TICKS(5000);
+  const TickType_t delay_10s = pdMS_TO_TICKS(10000);
+  const TickType_t delay_15s = pdMS_TO_TICKS(15000);
+  const TickType_t delay_fast = pdMS_TO_TICKS(100);
+  const TickType_t delay_1s = pdMS_TO_TICKS(1000);
+  const TickType_t delay_3s = pdMS_TO_TICKS(3000);
+  const TickType_t delay_tail = pdMS_TO_TICKS(500);
+
+  // Number of fast toggles
+  const uint8_t fast_blink_count = 50;
+
+  for (;;) {
+    // Solid ON for 5 seconds
+    HAL_GPIO_WritePin(LED_PORT, LED_PIN, LED_ON);
+    vTaskDelay(delay_5s);
+
     HAL_GPIO_WritePin(LED_PORT, LED_PIN, LED_OFF);
+    vTaskDelay(delay_1s);
 
-    const TickType_t delay_5s    = pdMS_TO_TICKS(5000);
-    const TickType_t delay_10s    = pdMS_TO_TICKS(10000);
-    const TickType_t delay_15s    = pdMS_TO_TICKS(15000);
-    const TickType_t delay_fast   = pdMS_TO_TICKS(100);
-    const TickType_t delay_1s    = pdMS_TO_TICKS(1000);
-    const TickType_t delay_3s    = pdMS_TO_TICKS(3000);
-    const TickType_t delay_tail    = pdMS_TO_TICKS(500);
-
-    // Number of fast toggles
-    const uint8_t fast_blink_count = 50;
-
-    for (;;)
-    {
-        // Solid ON for 5 seconds
-        HAL_GPIO_WritePin(LED_PORT, LED_PIN, LED_ON);
-        vTaskDelay(delay_5s);
-
-        HAL_GPIO_WritePin(LED_PORT, LED_PIN, LED_OFF);
-        vTaskDelay(delay_1s);
-
-        // Fast blinking
-        for (uint8_t i = 0; i < fast_blink_count; ++i)
-        {
-            HAL_GPIO_TogglePin(LED_PORT, LED_PIN);
-            vTaskDelay(delay_fast);
-        }
-
-        // Optional: explicitly ensure OFF before next long ON
-        HAL_GPIO_WritePin(LED_PORT, LED_PIN, LED_OFF);
-        vTaskDelay(delay_tail);
+    // Fast blinking
+    for (uint8_t i = 0; i < fast_blink_count; ++i) {
+      HAL_GPIO_TogglePin(LED_PORT, LED_PIN);
+      vTaskDelay(delay_fast);
     }
+
+    // Optional: explicitly ensure OFF before next long ON
+    HAL_GPIO_WritePin(LED_PORT, LED_PIN, LED_OFF);
+    vTaskDelay(delay_tail);
+  }
 }
 
 void blinky::init() {
