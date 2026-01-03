@@ -1,6 +1,6 @@
 # VibeThing
 
-The Internet of things (IoT), Zigbee, Matter, Thread, WiFi, ESP32, STM32, FreeRTOS, Arduino
+The [Internet of things (IoT)](https://grokipedia.com/page/IOT), [Zigbee](https://grokipedia.com/page/Zigbee), [Matter](https://grokipedia.com/page/Matter_(standard)), [Thread](https://grokipedia.com/page/Thread_(network_protocol)), [Wi-Fi](https://grokipedia.com/page/Wi-Fi), [Bluetooth](https://grokipedia.com/page/Bluetooth), [STM32](https://www.st.com/en/microcontrollers-microprocessors/stm32-32-bit-arm-cortex-mcus.html), [ESP32](https://www.espressif.com/en/products/socs/esp32), [FreeRTOS](https://grokipedia.com/page/FreeRTOS), [SCADA](https://grokipedia.com/page/SCADA), [Arduino](https://grokipedia.com/page/Arduino), [Raspberry Pi](https://grokipedia.com/page/Raspberry_Pi)
 
 ---
 ## 📝 License
