@@ -1,0 +1,10 @@
+/* config.in - Template for generated config.h */
+
+#ifndef CONFIG_H
+#define CONFIG_H
+
+#define PROJECT_VERSION "@PROJECT_VERSION@"
+#define PROJECT_NAME    "@PROJECT_NAME@"
+#define BUILD_DATE      "@BUILD_DATE@"
+
+#endif /* CONFIG_H */
