@@ -1,16 +1,3 @@
-/*
-spi_device_interface_config_t devcfg = {
-  .command_bits = 0,
-  .address_bits = 0,
-  .dummy_bits = 0,
-  .mode = 0,
-  .clock_source = SPI_CLK_SRC_DEFAULT,
-  .clock_speed_hz = 4000000,
-  .spics_io_num = SPI_CS_GPIO,
-  .queue_size = 1,
-};
-*/
-
 #include "driver/gpio.h"
 #include "driver/spi_master.h"
 #include "esp_log.h"
@@ -226,7 +213,7 @@ extern "C" void app_main(void) {
 
   CHECK(nrf24l01_set_address_width(&nrf, NRF24L01_ADDRESS_WIDTH_5_BYTES));
 
-  CHECK(nrf24l01_set_channel_frequency(&nrf, 77));
+  CHECK(nrf24l01_set_channel_frequency(&nrf, 95));
 
   CHECK(nrf24l01_set_data_rate(&nrf, NRF24L01_DATA_RATE_250K));
 
@@ -279,7 +266,7 @@ extern "C" void app_main(void) {
 
   ESP_LOGI(TAG, "Receiver ready:");
   ESP_LOGI(TAG, "  Address: E7 E7 E7 E7 E7 (pipe 0)");
-  ESP_LOGI(TAG, "  Channel: 77");
+  ESP_LOGI(TAG, "  Channel: 95");
   ESP_LOGI(TAG, "  Rate:    250 kbps");
   ESP_LOGI(TAG, "  PA:      -18 dBm");
   ESP_LOGI(TAG, "  Payload: 32 bytes static");

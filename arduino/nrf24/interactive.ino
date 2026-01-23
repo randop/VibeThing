@@ -6,19 +6,22 @@
 
 static const unsigned int PAYLOAD = 32;
 
-// CE, CSN pins
-RF24 radio(9, 10);
-
-//Important: Must be similar on each modules
+/********************************************************
+IMPORTANT: Must be set identical with receivers
+*********************************************************/
 const byte address[5] = {0xE7, 0xE7, 0xE7, 0xE7, 0xE7};
+static const unsigned int RF_CHANNEL = 95;
+/********************************************************/
+
+static const unsigned int PIN_NRF_CE = 9;
+static const unsigned int PIN_NRF_CNS = 10;
+RF24 radio(PIN_NRF_CE, PIN_NRF_CNS);
 
 void setup() {
   Serial.begin(115200);
 
   delay(200);
 
-  // ─── Very important ───
-  // Mix multiple analog pins + time for better initial seed
   randomSeed(
     (analogRead(A0) << 2) ^
     (analogRead(A1) << 1) ^
@@ -39,7 +42,7 @@ void setup() {
 
   radio.setPALevel(RF24_PA_LOW);
   radio.setDataRate(RF24_250KBPS);
-  radio.setChannel(77);
+  radio.setChannel(RF_CHANNEL);
   radio.setPayloadSize(32);
   radio.setAutoAck(true);
   radio.setCRCLength(RF24_CRC_16);
