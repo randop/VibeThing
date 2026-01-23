@@ -3,19 +3,33 @@
 #include <nRF24L01.h>
 #include <RF24.h>
 #include <printf.h>
+#include <TM1638.h>
+#include <TM16xxButtons.h>
 
 static const unsigned int PAYLOAD = 32;
 
 /********************************************************
-  IMPORTANT: Must be set identical with receivers
-*********************************************************/
-const byte address[5] = {0xE7, 0xE7, 0xE7, 0xE7, 0xE7};
-static const unsigned int RF_CHANNEL = 95;
-/********************************************************/
-
+* nRF24L01
+*-------------------------------------------------------*/
 static const unsigned int PIN_NRF_CE = 9;
 static const unsigned int PIN_NRF_CNS = 10;
 RF24 radio(PIN_NRF_CE, PIN_NRF_CNS);
+
+// IMPORTANT: Must be set identical with receivers
+const byte address[5] = {0xE7, 0xE7, 0xE7, 0xE7, 0xE7};
+static const unsigned int RF_CHANNEL = 95;
+/*======================================================*/
+
+/********************************************************
+* TM1638
+*-------------------------------------------------------*/
+const int PIN_STB = 2;
+const int PIN_CLK = 3;
+const int PIN_DIO = 4;
+
+TM1638 module(PIN_DIO, PIN_CLK, PIN_STB);
+TM16xxButtons buttons(&module);
+/*======================================================*/
 
 static const unsigned int TRANSMIT_INTERVAL = 3000;
 
@@ -49,8 +63,28 @@ void setup() {
 
   delay(200);
 
+  pinMode(PIN_STB, OUTPUT);
+  pinMode(PIN_CLK, OUTPUT);
+  pinMode(PIN_DIO, OUTPUT);
+  pinMode(LED_BUILTIN, OUTPUT);
+  delay(50);
+  digitalWrite(LED_BUILTIN, LOW);
+  digitalWrite(PIN_STB, HIGH);
+  digitalWrite(PIN_CLK, HIGH);
+
+  // Initialize display: on + medium brightness (0-7)
+  module.setupDisplay(true, 4);
+
+  // Optional: clear everything at start
+  module.clearDisplay();
+
+  // Turn all LEDs off
+  module.setLEDs(0);
+
   if (!radio.begin()) {
     DBG_PRINTLN("nRF24 hardware is not responding!!");
+    module.clearDisplay();
+    module.setDisplayToString("nrF Err", 0, 0);
     while (1); // halt
   }
 
@@ -77,6 +111,10 @@ void setup() {
   DBG_PRINT("Is valid / responding: ");
   DBG_PRINTLN(radio.isValid() ? "YES" : "NO");
 
+  module.clearDisplay();
+  module.setDisplayToString("nrF Good", 0, 0);
+
+  delay(2000);
 }
 
 void loop() {
@@ -88,8 +126,13 @@ void loop() {
   if (ok) {
     DBG_PRINT("Message sent: ");
     DBG_PRINTLN(text);
+
+    module.clearDisplay();
+    module.setDisplayToString(text, 0, 0);
   } else {
     DBG_PRINTLN("ERROR: message delivery");
+    module.clearDisplay();
+    module.setDisplayToString("trn Err", 0, 0);
   }
 
   delay(TRANSMIT_INTERVAL);
