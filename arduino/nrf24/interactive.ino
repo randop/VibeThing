@@ -7,7 +7,7 @@
 static const unsigned int PAYLOAD = 32;
 
 /********************************************************
-IMPORTANT: Must be set identical with receivers
+  IMPORTANT: Must be set identical with receivers
 *********************************************************/
 const byte address[5] = {0xE7, 0xE7, 0xE7, 0xE7, 0xE7};
 static const unsigned int RF_CHANNEL = 95;
@@ -17,8 +17,25 @@ static const unsigned int PIN_NRF_CE = 9;
 static const unsigned int PIN_NRF_CNS = 10;
 RF24 radio(PIN_NRF_CE, PIN_NRF_CNS);
 
+static const unsigned int TRANSMIT_INTERVAL = 3000;
+
+#define DEBUG 0
+
+#if DEBUG == 1
+#define DBG_PRINT(...)    Serial.print(__VA_ARGS__)
+#define DBG_PRINTLN(...)  Serial.println(__VA_ARGS__)
+#else
+#define DBG_PRINT(...)    do {} while (0)
+#define DBG_PRINTLN(...)  do {} while (0)
+#endif
+
 void setup() {
+#if DEBUG == 1
   Serial.begin(115200);
+  while (!Serial) {
+    ;
+  }
+#endif
 
   delay(200);
 
@@ -33,12 +50,12 @@ void setup() {
   delay(200);
 
   if (!radio.begin()) {
-    Serial.println("nRF24 hardware is not responding!!");
+    DBG_PRINTLN("nRF24 hardware is not responding!!");
     while (1); // halt
   }
 
-  Serial.println("Hardware detected: nRF24L01");
-  Serial.println("TRANSMITTER mode");
+  DBG_PRINTLN("Hardware detected: nRF24L01");
+  DBG_PRINTLN("TRANSMITTER mode");
 
   radio.setPALevel(RF24_PA_LOW);
   radio.setDataRate(RF24_250KBPS);
@@ -49,14 +66,16 @@ void setup() {
   radio.openWritingPipe(address);
   radio.stopListening();
 
+#if DEBUG == 1
   printf_begin();
   radio.printDetails();
+#endif
 
-  Serial.print("Chip connected: ");
-  Serial.println(radio.isChipConnected() ? "YES" : "NO");
+  DBG_PRINT("Chip connected: ");
+  DBG_PRINTLN(radio.isChipConnected() ? "YES" : "NO");
 
-  Serial.print("Is valid / responding: ");
-  Serial.println(radio.isValid() ? "YES" : "NO");
+  DBG_PRINT("Is valid / responding: ");
+  DBG_PRINTLN(radio.isValid() ? "YES" : "NO");
 
 }
 
@@ -64,16 +83,16 @@ void loop() {
   char text[32];
   generateRandomHex32(text);
 
-  bool ok = radio.write(text, PAYLOAD);  // force 32 bytes
+  bool ok = radio.write(text, PAYLOAD);
 
   if (ok) {
-    Serial.print("Message sent: ");
-    Serial.println(text);
+    DBG_PRINT("Message sent: ");
+    DBG_PRINTLN(text);
   } else {
-    Serial.println("ERROR: message delivery");
+    DBG_PRINTLN("ERROR: message delivery");
   }
 
-  delay(5000);
+  delay(TRANSMIT_INTERVAL);
 }
 
 /**
@@ -88,8 +107,8 @@ void loop() {
 */
 void rightPadSpaces(char* dest, size_t destSize, const char* src, byte targetWidth)
 {
-  if (destSize == 0) return;           // safety
-  dest[0] = '\0';                      // always start empty
+  if (destSize == 0) return;
+  dest[0] = '\0';
 
   if (targetWidth == 0) return;
 
