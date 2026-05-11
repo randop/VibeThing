@@ -1,0 +1,19 @@
+idf_component_register(
+    SRCS
+        "main.c"
+        "wifi_manager.c"
+        "ota_manager.c"
+    INCLUDE_DIRS
+        "."
+    EMBED_TXTFILES
+        "certificate.crt"
+    REQUIRES
+        nvs_flash
+        esp_wifi
+        esp_event
+        esp_netif
+        esp_https_ota
+        app_update
+        log
+        bootloader_support
+)
