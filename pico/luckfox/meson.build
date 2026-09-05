@@ -1,7 +1,15 @@
-project('luckfox', 'cpp',
-  version : run_command('cat', 'VERSION', check: true).stdout().strip(),
-  meson_version : '>=1.10.0',
-  default_options : ['cpp_std=c++17']
+project(
+    'luckfox',
+    'cpp',
+    version: run_command('cat', 'VERSION', check: true).stdout().strip(),
+    meson_version: '>=1.10.0',
+    default_options: [
+        'cpp_std=c++17',
+        'optimization=3',
+        'strip=true',
+        'b_lto=true',
+        'b_ndebug=true',
+    ],
 )
 
 # Capture build date/time
@@ -13,15 +21,41 @@ conf_data = configuration_data()
 conf_data.set('PROJECT_VERSION', meson.project_version())
 conf_data.set('PROJECT_NAME', meson.project_name())
 conf_data.set('BUILD_DATE', build_date)
-configure_file(
-  input : 'config.in',
-  output : 'config.h',
-  configuration : conf_data
+configure_file(input: 'config.in', output: 'config.h', configuration: conf_data)
+
+###############################################################################
+# Dependencies
+###############################################################################
+
+thread_dep = dependency('threads')
+
+boost_dep = dependency(
+    'boost',
+    version: '>=1.92.0',
+    modules: [
+        'filesystem',
+        'thread',
+        'url',
+        'program_options',
+        'system',
+        'json',
+    ],
+    required: true,
+    static: true,
+)
+
+wolfssl_dep = dependency(
+    'wolfssl',
+    version: '>=5.9.2',
+    required: true,
+    static: true,
 )
 
 includes = include_directories('.')
 
-executable('luckfox',
-  'src/main.cpp',
-  include_directories: includes
+executable(
+    'lcfx',
+    'src/main.cpp',
+    include_directories: includes,
+    dependencies: [thread_dep, boost_dep, wolfssl_dep],
 )
