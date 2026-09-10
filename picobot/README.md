@@ -1,4 +1,4 @@
-# pico
+# picobot
 
 ## setup build
 ```bash

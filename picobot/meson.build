@@ -1,5 +1,5 @@
 project(
-    'luckfox',
+    'picobot',
     'cpp',
     version: run_command('cat', 'VERSION', check: true).stdout().strip(),
     meson_version: '>=1.10.0',
@@ -39,6 +39,7 @@ boost_dep = dependency(
         'program_options',
         'system',
         'json',
+        'context',
     ],
     required: true,
     static: true,
@@ -54,7 +55,7 @@ wolfssl_dep = dependency(
 includes = include_directories('.')
 
 executable(
-    'lcfx',
+    'picobot',
     'src/main.cpp',
     include_directories: includes,
     dependencies: [thread_dep, boost_dep, wolfssl_dep],
